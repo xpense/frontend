@@ -1,27 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Flex, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
-import { Formik, Form, Field, ErrorMessage, FormikValues, FormikHelpers, FieldProps, FormikErrors, FormikProps } from 'formik';
+import { Box, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
+import { Formik, Form, Field, FormikHelpers, FieldProps, FormikProps } from 'formik';
 
-type SignUpProps = Record<string, unknown>;
+import { SignUpRequest } from './api/types';
+import { ApiContext } from './App';
 
-export type SignUpFormValues = {
-    email: string;
-    password: string;
+type Props = Record<string, unknown>;
+type SignUpFormValues = SignUpRequest & {
     passwordRepeat: string;
 };
+type SignUpFormErrors = Partial<SignUpFormValues>;
 
-type SignUpFormErrors = {
-    email?: string;
-    password?: string;
-    passwordRepeat?: string;
+const initialSignUpFormValues: SignUpFormValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    passwordRepeat: '',
 };
 
-export const SignUp = (props: SignUpProps) => {
+export const SignUp: React.FC<Props> = () => {
+    const api = useContext(ApiContext);
     const [formErrors, setFormErrors] = useState<SignUpFormErrors>({});
 
-    const validate = ({ email, password, passwordRepeat }: SignUpFormValues) => {
+    const validate = ({ firstName, lastName, email, password, passwordRepeat }: SignUpFormValues) => {
         const errors: SignUpFormErrors = {};
+
+        if (firstName.length === 0) {
+            errors.firstName = 'Missing first name';
+        }
+
+        if (lastName.length === 0) {
+            errors.lastName = 'Missing last name';
+        }
 
         if (email.length === 0) {
             errors.email = 'Missing email';
@@ -57,37 +69,51 @@ export const SignUp = (props: SignUpProps) => {
     return (
         <Flex direction={'row'} align={'center'} justify={'center'} width='100vw' height='100vh'>
             <Box width='50%' height='50%' backgroundColor='blue'>
-                <Formik initialValues={{ email: '', password: '', passwordRepeat: '' }} validate={validate} onSubmit={onSubmit}>
+                <Formik initialValues={initialSignUpFormValues} validate={validate} onSubmit={onSubmit}>
                     {({ isSubmitting }: FormikProps<SignUpFormValues>) => (
                         <Form>
                             <Flex direction={'column'} align={'center'} justify={'center'} padding='1em'>
+                                <Field name='firstName'>
+                                    {({ field }: FieldProps<string, SignUpFormValues>) => (
+                                        <FormControl id='firstName' isInvalid={formErrors.firstName ? true : false}>
+                                            <Input {...field} type='text' name='firstName' placeholder='First name' />
+                                            <FormErrorMessage>{formErrors.firstName}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
+                                <Field name='lastName'>
+                                    {({ field }: FieldProps<string, SignUpFormValues>) => (
+                                        <FormControl id='lastName' isInvalid={formErrors.lastName ? true : false}>
+                                            <Input {...field} type='text' name='lastName' placeholder='Last name' marginTop='1em' />
+                                            <FormErrorMessage>{formErrors.lastName}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                                 <Field name='email'>
-                                    {({ field, form }: FieldProps<string, SignUpFormValues>) => (
-                                        <FormControl id='email' isInvalid={formErrors.email ? true : false}>
+                                    {({ field }: FieldProps<string, SignUpFormValues>) => (
+                                        <FormControl id='email' isInvalid={formErrors.email ? true : false} marginTop='1em'>
                                             <Input {...field} type='email' name='email' placeholder='Email address' />
-                                            <FormErrorMessage isInvalid={formErrors.email}>{formErrors.email}</FormErrorMessage>
+                                            <FormErrorMessage>{formErrors.email}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name='password'>
-                                    {({ field, form }: FieldProps<string, SignUpFormValues>) => (
+                                    {({ field }: FieldProps<string, SignUpFormValues>) => (
                                         <FormControl id='password' isInvalid={formErrors.password ? true : false} marginTop='1em'>
                                             <Input {...field} type='password' name='password' placeholder='Password' />
-                                            <FormErrorMessage isInvalid={formErrors.password}>{formErrors.password}</FormErrorMessage>
+                                            <FormErrorMessage>{formErrors.password}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name='passwordRepeat'>
-                                    {({ field, form }: FieldProps<string, SignUpFormValues>) => (
+                                    {({ field }: FieldProps<string, SignUpFormValues>) => (
                                         <FormControl
                                             id='passwordRepeat'
                                             isInvalid={formErrors.passwordRepeat ? true : false}
                                             marginTop='1em'
                                         >
                                             <Input {...field} type='password' name='passwordRepeat' placeholder='Repeat Password' />
-                                            <FormErrorMessage isInvalid={formErrors.passwordRepeat}>
-                                                {formErrors.passwordRepeat}
-                                            </FormErrorMessage>
+                                            <FormErrorMessage>{formErrors.passwordRepeat}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>

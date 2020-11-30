@@ -23,18 +23,15 @@ module.exports = {
             arrowFunctions: true,
         },
     },
-    plugins: ['react', '@typescript-eslint', 'prettier'
-    ],
+    plugins: ['react', '@typescript-eslint', 'prettier'],
     settings: {
         react: {
             version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
         },
         'import/resolver': {
             node: {
-                extensions: ['.js', '.jsx', '.ts', '.tsx'
-                ],
-                paths: ['./src'
-                ],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                paths: ['./src'],
             },
         },
     },

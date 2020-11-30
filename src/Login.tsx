@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Flex, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
-import { Formik, Form, Field, ErrorMessage, FormikValues, FormikHelpers, FieldProps, FormikProps } from 'formik';
+import { Box, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
+import { Formik, Form, Field, FormikHelpers, FieldProps, FormikProps } from 'formik';
 
-type LoginProps = Record<string, unknown>;
-type LoginFormValues = {
-    email: string;
-    password: string;
-};
-type LoginFormErrors = {
-    email?: string;
-    password?: string;
+import { LoginRequest } from './api/types';
+
+type Props = Record<string, never>;
+type LoginFormErrors = Partial<LoginRequest>;
+
+const initialLoginFormValues: LoginRequest = {
+    email: '',
+    password: '',
 };
 
-export const Login = (props: LoginProps) => {
+export const Login: React.FC<Props> = () => {
     const [formErrors, setFormErrors] = useState<LoginFormErrors>({});
 
-    const validate = ({ email, password }: LoginFormValues) => {
+    const validate = ({ email, password }: LoginRequest) => {
         const errors: LoginFormErrors = {};
 
         if (email.length < 5) {
@@ -32,7 +32,7 @@ export const Login = (props: LoginProps) => {
         return formErrors;
     };
 
-    const onSubmit = (values: LoginFormValues, { setSubmitting }: FormikHelpers<LoginFormValues>) => {
+    const onSubmit = (values: LoginRequest, { setSubmitting }: FormikHelpers<LoginRequest>) => {
         setSubmitting(true);
         console.log('submit');
         setTimeout(() => {
@@ -43,23 +43,23 @@ export const Login = (props: LoginProps) => {
     return (
         <Flex direction={'row'} align={'center'} justify={'center'} width='100vw' height='100vh'>
             <Box width='50%' height='50%' backgroundColor='blue'>
-                <Formik initialValues={{ email: '', password: '' }} validate={validate} onSubmit={onSubmit}>
-                    {({ isSubmitting }: FormikProps<LoginFormValues>) => (
+                <Formik initialValues={initialLoginFormValues} validate={validate} onSubmit={onSubmit}>
+                    {({ isSubmitting }: FormikProps<LoginRequest>) => (
                         <Form>
                             <Flex direction={'column'} align={'center'} justify={'center'} padding='1em'>
                                 <Field name='email'>
-                                    {({ field, form }: FieldProps) => (
+                                    {({ field }: FieldProps) => (
                                         <FormControl id='email' isInvalid={formErrors.email ? true : false}>
                                             <Input {...field} type='email' name='email' placeholder='Email address' />
-                                            <FormErrorMessage isInvalid={formErrors.email}>{formErrors.email}</FormErrorMessage>
+                                            <FormErrorMessage>{formErrors.email}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name='password'>
-                                    {({ field, form }: FieldProps) => (
+                                    {({ field }: FieldProps) => (
                                         <FormControl id='password' isInvalid={formErrors.password ? true : false} marginTop='1em'>
                                             <Input {...field} type='password' name='password' placeholder='Password' />
-                                            <FormErrorMessage isInvalid={formErrors.password}>{formErrors.password}</FormErrorMessage>
+                                            <FormErrorMessage>{formErrors.password}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
