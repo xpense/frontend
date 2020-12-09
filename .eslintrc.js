@@ -1,6 +1,7 @@
 module.exports = {
     root: true,
     extends: [
+        'prettier',
         'eslint:recommended',
         'plugin:prettier/recommended',
         'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
@@ -36,7 +37,7 @@ module.exports = {
         },
     },
     rules: {
-        // Existing rules
+    // Existing rules
         'comma-dangle': 'off', // https://eslint.org/docs/rules/comma-dangle
         'function-paren-newline': 'off', // https://eslint.org/docs/rules/function-paren-newline
         'global-require': 'off', // https://eslint.org/docs/rules/global-require
@@ -47,5 +48,7 @@ module.exports = {
         'import/prefer-default-export': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-var-requires': 'off',
-    }
+        '@typescript-eslint/indent': 'off',
+        // 'indent': ["error", 4, { "ignoredNodes": ["ConditionalExpression"] }]
+    },
 };
