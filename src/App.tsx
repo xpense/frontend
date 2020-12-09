@@ -1,6 +1,8 @@
 import React, { createContext } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
+
+import { Navbar } from './components/Navbar';
 import { Login } from './components/Login';
 import { SignUp } from './components/SignUp';
 import Api from './api/api';
@@ -15,6 +17,7 @@ const App: React.FC<Props> = () => {
         <ChakraProvider>
             <ApiContext.Provider value={api}>
                 <Router>
+                    <Navbar />
                     {/* A <Switch> looks through its children <Route>s and renders the first one that matches the current URL. */}
                     <Switch>
                         <Route exact path={'/signup'}>
