@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useToast, Box, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
+import { useToast, Box, Flex, FormLabel, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
 import { Formik, Form, Field, FormikHelpers, FieldProps, FormikProps } from 'formik';
 
 import { SignUpRequest } from '../api/types';
@@ -93,7 +93,7 @@ export const SignUp: React.FC<Props> = () => {
 
     return (
         <Flex direction={'row'} align={'center'} justify={'center'} width='100vw' height='100vh'>
-            <Box width='50%' height='50%' backgroundColor='blue'>
+            <Box width={['90%']} maxWidth='500px' backgroundColor='blue'>
                 <Formik
                     initialValues={initialSignUpFormValues}
                     validateOnBlur={true}
@@ -107,15 +107,17 @@ export const SignUp: React.FC<Props> = () => {
                                 <Field name='first_name'>
                                     {({ field }: FieldProps<string, SignUpFormValues>) => (
                                         <FormControl id='first_name' isInvalid={formErrors.first_name ? true : false}>
-                                            <Input {...field} type='text' name='first_name' placeholder='First name' />
+                                            <FormLabel>First Name</FormLabel>
+                                            <Input {...field} type='text' name='first_name' placeholder='John' />
                                             <FormErrorMessage>{formErrors.first_name}</FormErrorMessage>
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name='last_name'>
                                     {({ field }: FieldProps<string, SignUpFormValues>) => (
-                                        <FormControl id='last_name' isInvalid={formErrors.last_name ? true : false}>
-                                            <Input {...field} type='text' name='last_name' placeholder='Last name' marginTop='1em' />
+                                        <FormControl id='last_name' isInvalid={formErrors.last_name ? true : false} marginTop='1em'>
+                                            <FormLabel>Last Name</FormLabel>
+                                            <Input {...field} type='text' name='last_name' placeholder='Doe' />
                                             <FormErrorMessage>{formErrors.last_name}</FormErrorMessage>
                                         </FormControl>
                                     )}
@@ -123,7 +125,8 @@ export const SignUp: React.FC<Props> = () => {
                                 <Field name='email'>
                                     {({ field }: FieldProps<string, SignUpFormValues>) => (
                                         <FormControl id='email' isInvalid={formErrors.email ? true : false} marginTop='1em'>
-                                            <Input {...field} type='email' name='email' placeholder='Email address' />
+                                            <FormLabel>Email</FormLabel>
+                                            <Input {...field} type='email' name='email' placeholder='john@doe.com' />
                                             <FormErrorMessage>{formErrors.email}</FormErrorMessage>
                                         </FormControl>
                                     )}
@@ -131,12 +134,13 @@ export const SignUp: React.FC<Props> = () => {
                                 <Field name='password'>
                                     {({ field }: FieldProps<string, SignUpFormValues>) => (
                                         <FormControl id='password' isInvalid={formErrors.password ? true : false} marginTop='1em'>
+                                            <FormLabel>Password</FormLabel>
                                             <Box position='relative'>
                                                 <Input
                                                     {...field}
                                                     type={showPasswordView ? 'text' : 'password'}
                                                     name='password'
-                                                    placeholder='Password'
+                                                    placeholder='examplePassword123!{}'
                                                 />
                                                 {showPasswordView ? (
                                                     <ViewOffIcon
@@ -171,12 +175,13 @@ export const SignUp: React.FC<Props> = () => {
                                             isInvalid={formErrors.password_repeat ? true : false}
                                             marginTop='1em'
                                         >
+                                            <FormLabel>Repeat password</FormLabel>
                                             <Box position='relative'>
                                                 <Input
                                                     {...field}
                                                     type={showRepeatPasswordView ? 'text' : 'password'}
                                                     name='password_repeat'
-                                                    placeholder='Repeat Password'
+                                                    placeholder='examplePassword123!{}'
                                                 />
                                                 {showRepeatPasswordView ? (
                                                     <ViewOffIcon

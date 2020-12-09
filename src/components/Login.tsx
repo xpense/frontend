@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, useHistory, Link } from 'react-router-dom';
-import { useToast, Box, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
+import { useToast, Box, Flex, FormLabel, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
 import { Formik, Form, Field, FormikHelpers, FieldProps, FormikProps } from 'formik';
 
-import { LoginRequest, JSONApiError } from '../api/types';
+import { LoginRequest } from '../api/types';
 import { ApiContext } from '../App';
 
 type Props = Record<string, never>;
@@ -57,7 +57,7 @@ export const Login: React.FC<Props> = () => {
 
     return (
         <Flex direction={'row'} align={'center'} justify={'center'} width='100vw' height='100vh'>
-            <Box width='50%' height='50%' backgroundColor='blue'>
+            <Box width={['90%']} maxWidth='500px' backgroundColor='blue'>
                 <Formik
                     initialValues={initialLoginFormValues}
                     validateOnBlur={false}
@@ -71,7 +71,8 @@ export const Login: React.FC<Props> = () => {
                                 <Field name='email'>
                                     {({ field }: FieldProps) => (
                                         <FormControl id='email' isInvalid={formErrors.email ? true : false}>
-                                            <Input {...field} type='email' name='email' placeholder='Email address' />
+                                            <FormLabel>Email</FormLabel>
+                                            <Input {...field} type='email' name='email' placeholder='john@doe.com' />
                                             <FormErrorMessage>{formErrors.email}</FormErrorMessage>
                                         </FormControl>
                                     )}
@@ -79,7 +80,8 @@ export const Login: React.FC<Props> = () => {
                                 <Field name='password'>
                                     {({ field }: FieldProps) => (
                                         <FormControl id='password' isInvalid={formErrors.password ? true : false} marginTop='1em'>
-                                            <Input {...field} type='password' name='password' placeholder='Password' />
+                                            <FormLabel>Password</FormLabel>
+                                            <Input {...field} type='password' name='password' placeholder='examplePassword123!{}' />
                                             <FormErrorMessage>{formErrors.password}</FormErrorMessage>
                                         </FormControl>
                                     )}
