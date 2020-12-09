@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
-import { Login } from './Login';
-import { SignUp } from './SignUp';
+import { Login } from './components/Login';
+import { SignUp } from './components/SignUp';
 import Api from './api/api';
 
 type Props = Record<string, never>;
@@ -17,13 +17,14 @@ const App: React.FC<Props> = () => {
                 <Router>
                     {/* A <Switch> looks through its children <Route>s and renders the first one that matches the current URL. */}
                     <Switch>
-                        <Route path={['/signup']}>
+                        <Route exact path={'/signup'}>
                             <SignUp />
                         </Route>
+                        <Route exact path={'/login'}>
+                            <Login />
+                        </Route>
+                        <Route component={() => <h1>Not Found</h1>} />
                     </Switch>
-                    <Route path={['/', '/login']}>
-                        <Login />
-                    </Route>
                 </Router>
             </ApiContext.Provider>
         </ChakraProvider>

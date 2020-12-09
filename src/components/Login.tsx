@@ -1,49 +1,70 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Box, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
+import React, { useState, useContext } from 'react';
+import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useToast, Box, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Button } from '@chakra-ui/react';
 import { Formik, Form, Field, FormikHelpers, FieldProps, FormikProps } from 'formik';
 
-import { LoginRequest } from './api/types';
+import { LoginRequest, JSONApiError } from '../api/types';
+import { ApiContext } from '../App';
 
 type Props = Record<string, never>;
 type LoginFormErrors = Partial<LoginRequest>;
 
-const initialLoginFormValues: LoginRequest = {
-    email: '',
-    password: '',
-};
-
 export const Login: React.FC<Props> = () => {
+    const api = useContext(ApiContext);
+    const history = useHistory();
+    const location = useLocation<{ email: string }>();
+    const toast = useToast();
+
     const [formErrors, setFormErrors] = useState<LoginFormErrors>({});
+
+    const initialLoginFormValues: LoginRequest = {
+        email: location.state ? location.state.email : '',
+        password: '',
+    };
 
     const validate = ({ email, password }: LoginRequest) => {
         const errors: LoginFormErrors = {};
 
-        if (email.length < 5) {
-            errors.email = 'Invalid email';
+        if (email.length <= 0) {
+            errors.email = 'Missing email';
         }
 
-        if (password.length < 5) {
-            errors.password = 'Invalid password';
+        if (password.length <= 0) {
+            errors.password = 'Missing password';
         }
 
         setFormErrors(errors);
-
         return formErrors;
     };
 
-    const onSubmit = (values: LoginRequest, { setSubmitting }: FormikHelpers<LoginRequest>) => {
+    const onSubmit = async (values: LoginRequest, { setSubmitting }: FormikHelpers<LoginRequest>) => {
         setSubmitting(true);
-        console.log('submit');
-        setTimeout(() => {
-            setSubmitting(false);
-        }, 1000);
+
+        try {
+            const resp = await api.login(values);
+            console.log(resp);
+            history.push('/home');
+        } catch (error) {
+            toast({
+                title: 'An error occurred.',
+                description: error.message ?? "Coudln't log in",
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            });
+        }
     };
 
     return (
         <Flex direction={'row'} align={'center'} justify={'center'} width='100vw' height='100vh'>
             <Box width='50%' height='50%' backgroundColor='blue'>
-                <Formik initialValues={initialLoginFormValues} validate={validate} onSubmit={onSubmit}>
+                <Formik
+                    initialValues={initialLoginFormValues}
+                    validateOnBlur={false}
+                    validateOnChange={false}
+                    validate={validate}
+                    onSubmit={onSubmit}
+                >
                     {({ isSubmitting }: FormikProps<LoginRequest>) => (
                         <Form>
                             <Flex direction={'column'} align={'center'} justify={'center'} padding='1em'>

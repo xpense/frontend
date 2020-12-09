@@ -24,16 +24,26 @@ export default class Api {
         const url = `${this.baseUrl}${path}`;
         const resp = await fetch(url, {
             method,
-            mode: 'cors', // no-cors, *cors, same-origin
+            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
         });
 
         if (resp.status >= 400 && resp.status <= 511) {
-            throw new Error(`Request to ${url} failed with status ${resp.status}`);
+            try {
+                const json = await resp.json();
+                return Promise.reject(json);
+            } catch (error) {
+                throw new Error(`Request to ${url} failed with status ${resp.status}`);
+            }
         }
 
-        return resp.json() as Promise<Response>;
+        try {
+            const json = (await resp.json()) as Promise<Response>;
+            return json;
+        } catch (error) {
+            return {} as Promise<Response>;
+        }
     }
 
     public login(body: LoginRequest): Promise<LoginResponse> {
@@ -41,6 +51,7 @@ export default class Api {
     }
 
     public signUp(body: SignUpRequest): Promise<void> {
+        console.log(body);
         return this.fetch(`/auth/signup`, { body, method: Method.POST });
     }
 }
